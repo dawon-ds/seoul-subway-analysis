@@ -1,114 +1,76 @@
 # Seoul Subway Ridership Analysis
 
-Analysis of Seoul Metro ridership data using SQLite, SQL, and Python.
+A data analysis project exploring **2025 Seoul Metro ridership patterns** using SQLite, SQL, and Python.
 
-The project builds a SQLite database from raw public transportation data and analyzes ridership patterns by station, subway line, time of day, weekday/weekend, and month.
+The project converts raw public transportation data into a structured SQLite database, performs SQL-based analysis, and visualizes the results with pandas and matplotlib.
+
+## What I Did
+
+- Built a SQLite database from **199,290 subway ridership records**
+- Designed the database schema and loaded cleaned CSV data using Python
+- Wrote SQL queries to analyze ridership by station, line, time, day type, and month
+- Used conditional aggregation to compare boarding and alighting patterns
+- Visualized SQL query results with pandas and matplotlib
 
 ## Tech Stack
 
-- Python
-- SQLite
-- SQL
-- pandas
-- matplotlib
-- Jupyter Notebook
+`Python` · `SQLite` · `SQL` · `pandas` · `matplotlib` · `Jupyter Notebook`
 
-## Data
+## Key Findings
 
-Seoul Metro Daily Hourly Ridership Data (2025)  
-Source: Seoul Open Data Plaza
-
-The dataset contains daily boarding and alighting counts for Seoul Metro Lines 1–8, divided by station and hourly time period.
-
-A total of 199,290 records were loaded into SQLite after removing empty rows.
-
-Raw data is not included in this repository.
-
-## Database
-
-The raw CSV data is cleaned with pandas and loaded into a SQLite database using a predefined schema.
-
-```text
-CSV
- ↓
-pandas
- ↓
-SQLite
- ↓
-SQL queries
- ↓
-pandas
- ↓
-Visualization
-```
-
-The database schema is defined in `sql/schema.sql`, and the data loading process is implemented in `src/load_data.py`.
+- **Line 2** recorded the highest total entries and exits among Lines 1–8.
+- Ridership showed clear commuting peaks around **08:00–09:00** and **18:00–19:00**.
+- Average weekday ridership was approximately **9.81M**, compared with **6.56M** on weekends.
+- Average daily weekday ridership was approximately **49.6% higher** than weekend ridership.
+- **December** recorded the highest monthly ridership in 2025.
 
 ## Analysis
 
 ### Ridership by Subway Line
 
-Line 2 recorded the highest total number of entries and exits among Seoul Metro Lines 1–8.
-
 ![Ridership by Line](outputs/passengers_by_line.png)
 
 ### Ridership by Time of Day
-
-Ridership shows two clear peaks during commuting hours, with the highest levels around 08:00–09:00 and 18:00–19:00.
 
 ![Ridership by Time](outputs/passengers_by_time.png)
 
 ### Weekday vs Weekend
 
-Average daily ridership was approximately:
-
-- Weekday: 9.81 million entries and exits
-- Weekend: 6.56 million entries and exits
-
-Weekday ridership was approximately 49.6% higher than weekend ridership.
-
 ![Weekday vs Weekend](outputs/weekday_vs_weekend.png)
 
 ### Monthly Ridership
 
-Monthly ridership varied throughout 2025, with the highest total recorded in December.
-
 ![Monthly Ridership](outputs/monthly_passengers.png)
 
-### Boarding and Alighting Differences
+### Boarding vs Alighting Difference
 
-Stations with the largest differences between boarding and alighting volumes were identified using conditional aggregation in SQL.
+Positive values indicate more boardings than alightings, while negative values indicate more alightings than boardings.
 
-![Boarding and Alighting](outputs/boarding_alighting_difference.png)
+![Boarding and Alighting Difference](outputs/boarding_alighting_difference.png)
 
-## SQL
+## Database & SQL
 
-The analysis uses SQL operations including:
+The analysis follows this workflow:
 
-- `GROUP BY`
-- `SUM`
-- `ORDER BY`
-- `CASE WHEN`
-- `COUNT(DISTINCT)`
-- `strftime()`
-
-Example:
-
-```sql
-SELECT
-    line,
-    SUM(
-        before_06 +
-        hour_06_07 +
-        hour_07_08 +
-        hour_08_09
-    ) AS total_passengers
-FROM subway_ridership
-GROUP BY line
-ORDER BY total_passengers DESC;
+```text
+Raw CSV
+   ↓
+Data Cleaning
+   ↓
+SQLite Database
+   ↓
+SQL Analysis
+   ↓
+pandas
+   ↓
+Visualization
 ```
 
-Full queries are available in `sql/queries.sql`.
+The database schema is defined in [`sql/schema.sql`](sql/schema.sql), and the complete analysis queries are available in [`sql/queries.sql`](sql/queries.sql).
+
+SQL techniques used include:
+
+`GROUP BY` · `SUM` · `ORDER BY` · `CASE WHEN` · `COUNT(DISTINCT)` · `strftime()`
 
 ## Project Structure
 
@@ -131,18 +93,27 @@ seoul-subway-analysis/
 └── .gitignore
 ```
 
+## Data
+
+**Seoul Metro Daily Hourly Ridership Data (2025)**  
+Source: Seoul Open Data Plaza
+
+The dataset contains daily boarding and alighting counts for Seoul Metro Lines 1–8 by station and time period.
+
+Raw data and the generated SQLite database are excluded from this repository.
+
 ## Run
 
-Install dependencies:
+Install the required packages:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Place the original CSV file in the `data/` directory and create the SQLite database:
+Place the original CSV file in the `data/` directory and build the database:
 
 ```bash
 python src/load_data.py
 ```
 
-Run `analysis.ipynb` to reproduce the analysis and visualizations.
+Then run `analysis.ipynb` to reproduce the analysis and visualizations.
