@@ -20,8 +20,7 @@ The project converts raw public transportation data into a structured SQLite dat
 
 - **Line 2** recorded the highest total entries and exits among Lines 1–8.
 - Ridership showed clear commuting peaks around **08:00–09:00** and **18:00–19:00**.
-- Average weekday ridership was approximately **9.81M**, compared with **6.56M** on weekends.
-- Average daily weekday ridership was approximately **49.6% higher** than weekend ridership.
+- Average daily ridership was **9.81M on weekdays** and **6.56M on weekends**, a difference of approximately **49.6%**.
 - **December** recorded the highest monthly ridership in 2025.
 
 ## Analysis
@@ -96,11 +95,13 @@ seoul-subway-analysis/
 ## Data
 
 **Seoul Metro Daily Hourly Ridership Data (2025)**  
-Source: Seoul Open Data Plaza
+Source: [Seoul Open Data Plaza](https://data.seoul.go.kr/dataList/OA-12921/S/1/datasetView.do)
 
-The dataset contains daily boarding and alighting counts for Seoul Metro Lines 1–8 by station and time period.
+The dataset contains daily boarding and alighting counts for Seoul Metro Lines 1–8 by station and hourly time period.
 
-Raw data and the generated SQLite database are excluded from this repository.
+After removing empty rows, **199,290 records** were used for the analysis.
+
+The raw dataset and generated SQLite database are not included in this repository.
 
 ## Run
 
