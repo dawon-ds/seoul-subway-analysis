@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 
 
-# 프로젝트 경로
+# Project paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 CSV_PATH = (
@@ -16,21 +16,21 @@ DB_PATH = BASE_DIR / "database" / "subway.db"
 SCHEMA_PATH = BASE_DIR / "sql" / "schema.sql"
 
 
-# 1. CSV 불러오기
+# Load raw CSV data
 df = pd.read_csv(CSV_PATH, encoding="cp949")
 
-# 완전히 비어 있는 행 제거
+# Remove completely empty rows
 df = df.dropna(how="all")
 
 print("CSV loaded")
 print("Rows:", len(df))
 
 
-# 2. 분석에 필요 없는 '연번' 컬럼 제거
+# Remove the unnecessary sequence column
 df = df.drop(columns=["연번"])
 
 
-# 3. DB에서 사용할 영문 컬럼명으로 변경
+# Rename columns for the database
 df.columns = [
     "date",
     "line",
@@ -60,15 +60,15 @@ df.columns = [
 ]
 
 
-# 4. SQLite 연결
+# Connect to SQLite
 conn = sqlite3.connect(DB_PATH)
 
 try:
-    # schema.sql 실행
+    # Create the database schema
     with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
         conn.executescript(f.read())
 
-    # 5. 데이터 적재
+    # Load data into SQLite
     df.to_sql(
         "subway_ridership",
         conn,
@@ -78,7 +78,7 @@ try:
 
     conn.commit()
 
-    # 6. 정상 적재 확인
+    # Verify the number of inserted records
     count = conn.execute(
         "SELECT COUNT(*) FROM subway_ridership"
     ).fetchone()[0]
