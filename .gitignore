@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# SQLite database
+database/*.db
+
+# Raw dataset
+data/*.csv
