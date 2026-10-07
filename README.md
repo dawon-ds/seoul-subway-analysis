@@ -4,7 +4,7 @@ A data analysis project exploring **2025 Seoul Metro ridership patterns** using 
 
 The project converts raw public transportation data into a structured SQLite database, performs SQL-based analysis, and visualizes the results with pandas and matplotlib.
 
-[Portfolio](https://incredible-march-0ef.notion.site/3e968564df5a810fa96de20448ca06fa)
+[Portfolio](https://incredible-march-0ef.notion.site/Seoul-Subway-Ridership-Analysis-3e968564df5a810fa96de20448ca06fa)
 
 ## Implementation
 
