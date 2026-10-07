@@ -4,6 +4,8 @@ A data analysis project exploring **2025 Seoul Metro ridership patterns** using 
 
 The project converts raw public transportation data into a structured SQLite database, performs SQL-based analysis, and visualizes the results with pandas and matplotlib.
 
+[Portfolio](https://incredible-march-0ef.notion.site/3e968564df5a810fa96de20448ca06fa)
+
 ## Implementation
 
 - Built a SQLite database from **199,290 subway ridership records**
@@ -21,7 +23,9 @@ The project converts raw public transportation data into a structured SQLite dat
 - **Line 2** recorded the highest total entries and exits among Lines 1–8.
 - Ridership showed clear commuting peaks around **08:00–09:00** and **18:00–19:00**.
 - Average daily ridership was **9.81M on weekdays** and **6.56M on weekends**, a difference of approximately **49.6%**.
-- **December** recorded the highest monthly ridership in 2025.
+- **December** recorded the highest monthly ridership in 2025; **January** recorded the lowest.
+
+Counts represent **entries plus exits**, rather than unique people or distinct journeys. Weekday/weekend averages divide each group's total by its number of observed dates. Weekdays include public holidays that fall Monday–Friday.
 
 ## Analysis
 
@@ -65,6 +69,27 @@ pandas
 Visualization
 ```
 
+### Table Design
+
+Each row represents a **date × line × station × boarding/alighting direction** record, with 20 time-band count columns.
+
+| Columns | Purpose |
+| --- | --- |
+| `id` | Auto-increment primary key |
+| `date`, `line` | Service date and subway line |
+| `station_code`, `station_name` | Station identifiers |
+| `direction` | Boarding (`승차`) or alighting (`하차`) |
+| `before_06`, `hour_06_07` … `hour_23_24`, `after_24` | Counts by time band |
+
+### SQL Example: Evening Commute by Line
+
+```sql
+SELECT line, SUM(hour_18_19) AS entries_and_exits
+FROM subway_ridership
+GROUP BY line
+ORDER BY entries_and_exits DESC;
+```
+
 The database schema is defined in [`sql/schema.sql`](sql/schema.sql), and the complete analysis queries are available in [`sql/queries.sql`](sql/queries.sql).
 
 SQL techniques used include:
@@ -99,7 +124,7 @@ Source: [Seoul Open Data Plaza](https://data.seoul.go.kr/dataList/OA-12921/S/1/d
 
 The dataset contains daily boarding and alighting counts for Seoul Metro Lines 1–8 by station and hourly time period.
 
-After removing empty rows, **199,290 records** were used for the analysis.
+The CSV is read with `cp949` encoding. After removing **134 completely empty rows**, **199,290 records** were used for the analysis. The sequence column is removed, and the remaining columns are mapped to the SQLite schema.
 
 The raw dataset and generated SQLite database are not included in this repository.
 
@@ -111,10 +136,24 @@ Install the required packages:
 pip install -r requirements.txt
 ```
 
-Place the original CSV file in the `data/` directory and build the database:
+Create the input, database, and output folders from the repository root:
+
+```bash
+python -c "from pathlib import Path; [Path(p).mkdir(parents=True, exist_ok=True) for p in ('data', 'database', 'outputs')]"
+```
+
+Place the original CSV at `data/서울교통공사_역별 일별 시간대별 승하차인원_20251231.csv`, then build the database:
 
 ```bash
 python src/load_data.py
 ```
 
-Then run `analysis.ipynb` to reproduce the analysis and visualizations.
+The loader creates `database/subway.db` and prints the inserted record count. Rerunning it rebuilds the `subway_ridership` table.
+
+Then run `analysis.ipynb` from the repository root to reproduce the analysis and visualizations. The station-name plot uses the Windows font `Malgun Gothic`; choose an installed Korean font on another platform.
+
+## Limitations & Review
+
+The project separates schema definition, CSV loading, SQL aggregation, and visualization into reusable components. Comparing daily averages rather than raw weekday/weekend totals accounts for the different numbers of days in each group.
+
+The analysis covers Seoul Metro Lines 1–8 for one year. Monthly totals are not normalized by month length, and public holidays are not separated from ordinary weekdays. Station-name aggregation combines records sharing a station name across lines. Multiple years, holiday labels, and daily-normalized monthly comparisons would support more detailed analysis.
