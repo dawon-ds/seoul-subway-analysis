@@ -60,6 +60,9 @@ df.columns = [
 ]
 
 
+# Create the database directory
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+
 # Connect to SQLite
 conn = sqlite3.connect(DB_PATH)
 
