@@ -152,6 +152,10 @@ The loader creates `database/subway.db` and prints the inserted record count. Re
 
 Then run `analysis.ipynb` from the repository root to reproduce the analysis and visualizations. The station-name plot uses the Windows font `Malgun Gothic`; choose an installed Korean font on another platform.
 
+## Validation
+
+The loader and all notebook code cells were rerun with the original CSV. SQLite contained **199,290 records**, all **five chart files** were generated, and the line, hourly, weekday/weekend, and monthly results matched the saved analysis. On non-Windows systems, an installed Korean font is needed to render station labels correctly.
+
 ## Limitations & Review
 
 The project separates schema definition, CSV loading, SQL aggregation, and visualization into reusable components. Comparing daily averages rather than raw weekday/weekend totals accounts for the different numbers of days in each group.
