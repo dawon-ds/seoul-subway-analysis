@@ -13,3 +13,6 @@ database/*.db
 
 # Raw dataset
 data/*.csv
+.env
+.env.*
+!.env.example
