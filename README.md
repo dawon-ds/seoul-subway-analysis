@@ -81,8 +81,6 @@ SQL techniques used include:
 
 Counts represent **entries plus exits**, rather than unique people or distinct journeys. Weekday/weekend averages divide each group's total by its number of observed dates. Weekdays include public holidays that fall Monday–Friday.
 
-### Analysis
-
 ### Ridership by Subway Line
 
 ![Ridership by Line](outputs/passengers_by_line.png)
